@@ -62,7 +62,12 @@ export type NotionEquationBlockType = z.infer<typeof NotionEquationBlockSchema>;
 export const NotionSyncedBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("synced_block"),
   synced_block: z.object({
-    synced_from: z.string().nullable(),
+    synced_from: z
+      .object({
+        block_id: z.string(),
+      })
+      .optional()
+      .nullable(),
   }),
 });
 export type NotionSyncedBlockType = z.infer<typeof NotionSyncedBlockSchema>;

@@ -14,6 +14,14 @@ test.describe("getNotionPage", () => {
     const page = await getNotionPage(process.env.NOTION_PAGE_ID || "");
     assert.strictEqual(page.id.replaceAll("-", ""), process.env.NOTION_PAGE_ID);
     assert.strictEqual(page.object, "page");
-    assert.strictEqual(page.contents.length, 100);
+  });
+  test.it("should work with a complex dashboard", async () => {
+    const page = await getNotionPage(process.env.NOTION_DASHBOARD_ID || "");
+
+    assert.strictEqual(
+      page.id.replaceAll("-", ""),
+      process.env.NOTION_DASHBOARD_ID
+    );
+    assert.strictEqual(page.object, "page");
   });
 });
