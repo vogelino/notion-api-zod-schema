@@ -12,6 +12,9 @@ export const NotionInternalFileObjectSchema = NotionFileBaseSchema.extend({
     expiry_time: z.string(),
   }),
 });
+export type NotionInternalFileObjectType = z.infer<
+  typeof NotionInternalFileObjectSchema
+>;
 
 export const NotionExternalFileObjectSchema = NotionFileBaseSchema.extend({
   type: z.literal("external"),
@@ -19,6 +22,9 @@ export const NotionExternalFileObjectSchema = NotionFileBaseSchema.extend({
     url: z.string().url(),
   }),
 });
+export type NotionExternalFileObjectType = z.infer<
+  typeof NotionExternalFileObjectSchema
+>;
 
 export const NotionFileSchema = z.discriminatedUnion("type", [
   NotionInternalFileObjectSchema,

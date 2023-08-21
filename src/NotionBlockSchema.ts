@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { NotionObjectSchema } from "./NotionObjectSchema.ts";
-import { NotionEmojiType, NotionTextSchema } from "./NotionTextSchema.ts";
+import { NotionEmojiSchema, NotionTextSchema } from "./NotionTextSchema.ts";
 import {
   NotionExternalFileObjectSchema,
   NotionFileSchema,
@@ -13,28 +13,35 @@ const NotionBlockBaseSchema = NotionObjectSchema.extend({
   object: z.literal("block"),
 });
 
-const NotionParagraphBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionParagraphBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("paragraph"),
   paragraph: z.object({
     rich_text: z.array(NotionTextSchema),
   }),
 });
+export type NotionParagraphBlockType = z.infer<
+  typeof NotionParagraphBlockSchema
+>;
 
-const NotionDividerBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionDividerBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("divider"),
 });
+export type NotionDividerBlockType = z.infer<typeof NotionDividerBlockSchema>;
 
-const NotionUnsupportedBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionUnsupportedBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("unsupported"),
 });
+export type NotionUnsupportedBlockType = z.infer<
+  typeof NotionUnsupportedBlockSchema
+>;
 
-const NotionCalloutBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionCalloutBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("callout"),
   callout: z.object({
     rich_text: z.array(NotionTextSchema),
     icon: z
       .discriminatedUnion("type", [
-        NotionEmojiType,
+        NotionEmojiSchema,
         NotionInternalFileObjectSchema,
         NotionExternalFileObjectSchema,
       ])
@@ -42,22 +49,25 @@ const NotionCalloutBlockSchema = NotionBlockBaseSchema.extend({
     color: NotionColorSchema,
   }),
 });
+export type NotionCalloutBlockType = z.infer<typeof NotionCalloutBlockSchema>;
 
-const NotionEquationBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionEquationBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("equation"),
   equation: z.object({
     expression: z.string(),
   }),
 });
+export type NotionEquationBlockType = z.infer<typeof NotionEquationBlockSchema>;
 
-const NotionSyncedBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionSyncedBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("synced_block"),
   synced_block: z.object({
     synced_from: z.string().nullable(),
   }),
 });
+export type NotionSyncedBlockType = z.infer<typeof NotionSyncedBlockSchema>;
 
-const NotionHeadingBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionHeadingBlockSchema = NotionBlockBaseSchema.extend({
   type: z.enum(["heading_1", "heading_2", "heading_3"]),
   heading_1: z.object({
     rich_text: z.array(NotionTextSchema),
@@ -65,52 +75,64 @@ const NotionHeadingBlockSchema = NotionBlockBaseSchema.extend({
     color: NotionColorSchema,
   }),
 });
+export type NotionHeadingBlockType = z.infer<typeof NotionHeadingBlockSchema>;
 
-const NotionHeading1BlockSchema = NotionHeadingBlockSchema.extend({
+export const NotionHeading1BlockSchema = NotionHeadingBlockSchema.extend({
   type: z.literal("heading_1"),
 });
+export type NotionHeading1BlockType = z.infer<typeof NotionHeading1BlockSchema>;
 
-const NotionHeading2BlockSchema = NotionHeadingBlockSchema.extend({
+export const NotionHeading2BlockSchema = NotionHeadingBlockSchema.extend({
   type: z.literal("heading_2"),
 });
+export type NotionHeading2BlockType = z.infer<typeof NotionHeading2BlockSchema>;
 
-const NotionHeading3BlockSchema = NotionHeadingBlockSchema.extend({
+export const NotionHeading3BlockSchema = NotionHeadingBlockSchema.extend({
   type: z.literal("heading_3"),
 });
+export type NotionHeading3BlockType = z.infer<typeof NotionHeading3BlockSchema>;
 
-const NotionBulletedListItemBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionBulletedListItemBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("bulleted_list_item"),
   bulleted_list_item: z.object({
     rich_text: z.array(NotionTextSchema),
     color: NotionColorSchema,
   }),
 });
+export type NotionBulletedListItemBlockType = z.infer<
+  typeof NotionBulletedListItemBlockSchema
+>;
 
-const NotionNumberedListItemBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionNumberedListItemBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("numbered_list_item"),
   numbered_list_item: z.object({
     rich_text: z.array(NotionTextSchema),
     color: NotionColorSchema,
   }),
 });
+export type NotionNumberedListItemBlockType = z.infer<
+  typeof NotionNumberedListItemBlockSchema
+>;
 
-const NotionToggleBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionToggleBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("toggle"),
   toggle: z.object({
     rich_text: z.array(NotionTextSchema),
     color: NotionColorSchema,
   }),
 });
+export type NotionToggleBlockType = z.infer<typeof NotionToggleBlockSchema>;
 
-const NotionQuoteBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionQuoteBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("quote"),
   quote: z.object({
     rich_text: z.array(NotionTextSchema),
     color: NotionColorSchema,
   }),
 });
+export type NotionQuoteBlockType = z.infer<typeof NotionQuoteBlockSchema>;
 
-const NotionTodoBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionTodoBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("to_do"),
   to_do: z.object({
     rich_text: z.array(NotionTextSchema),
@@ -118,15 +140,19 @@ const NotionTodoBlockSchema = NotionBlockBaseSchema.extend({
     checked: z.boolean(),
   }),
 });
+export type NotionTodoBlockType = z.infer<typeof NotionTodoBlockSchema>;
 
-const NotionChildPageBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionChildPageBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("child_page"),
   child_page: z.object({
     title: z.string(),
   }),
 });
+export type NotionChildPageBlockType = z.infer<
+  typeof NotionChildPageBlockSchema
+>;
 
-const NotionTableBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionTableBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("table"),
   table: z.object({
     table_width: z.number(),
@@ -134,15 +160,19 @@ const NotionTableBlockSchema = NotionBlockBaseSchema.extend({
     has_row_header: z.boolean(),
   }),
 });
+export type NotionTableBlockType = z.infer<typeof NotionTableBlockSchema>;
 
-const NotionTableOfContentsBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionTableOfContentsBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("table_of_contents"),
   table_of_contents: z.object({
     color: NotionColorSchema,
   }),
 });
+export type NotionTableOfContentsBlockType = z.infer<
+  typeof NotionTableOfContentsBlockSchema
+>;
 
-const NotionBookmarkBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionBookmarkBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("bookmark"),
   bookmark: z.object({
     url: z.string(),
@@ -151,51 +181,65 @@ const NotionBookmarkBlockSchema = NotionBlockBaseSchema.extend({
     icon: NotionFileSchema.nullable().optional(),
   }),
 });
+export type NotionBookmarkBlockType = z.infer<typeof NotionBookmarkBlockSchema>;
 
-const NotionBreadcrumbBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionBreadcrumbBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("breadcrumb"),
   breadcrumb: z.object({
     text: z.string(),
     link: z.string(),
   }),
 });
+export type NotionBreadcrumbBlockType = z.infer<
+  typeof NotionBreadcrumbBlockSchema
+>;
 
-const NotionChildDatabaseBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionChildDatabaseBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("child_database"),
   child_database: z.object({
     title: z.string(),
   }),
 });
+export type NotionChildDatabaseBlockType = z.infer<
+  typeof NotionChildDatabaseBlockSchema
+>;
 
-const NotionColumnBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionColumnBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("column"),
   column: z.object({
     ratio: z.number(),
   }),
 });
+export type NotionColumnBlockType = z.infer<typeof NotionColumnBlockSchema>;
 
-const NotionColumnListBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionColumnListBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("column_list"),
 });
+export type NotionColumnListBlockType = z.infer<
+  typeof NotionColumnListBlockSchema
+>;
 
-const NotionEmbedBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionEmbedBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("embed"),
   embed: z.object({
     url: z.string(),
   }),
 });
+export type NotionEmbedBlockType = z.infer<typeof NotionEmbedBlockSchema>;
 
-const NotionFileBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionFileBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("file"),
   file: NotionFileSchema,
 });
+export type NotionFileBlockType = z.infer<typeof NotionFileBlockSchema>;
 
-const NotionImageBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionImageBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("image"),
   image: NotionFileSchema,
 });
+export type NotionImageBlockType = z.infer<typeof NotionImageBlockSchema>;
 
-const NotionLinkPreviewBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionLinkPreviewBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("link_preview"),
   link_preview: z.object({
     url: z.string(),
@@ -204,31 +248,41 @@ const NotionLinkPreviewBlockSchema = NotionBlockBaseSchema.extend({
     image: NotionFileSchema.nullable().optional(),
   }),
 });
+export type NotionLinkPreviewBlockType = z.infer<
+  typeof NotionLinkPreviewBlockSchema
+>;
 
-const NotionLinkToPageBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionLinkToPageBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("link_to_page"),
 });
+export type NotionLinkToPageBlockType = z.infer<
+  typeof NotionLinkToPageBlockSchema
+>;
 
-const NotionPdfBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionPdfBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("pdf"),
   pdf: NotionFileSchema,
 });
+export type NotionPdfBlockType = z.infer<typeof NotionPdfBlockSchema>;
 
-const NotionTableRowBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionTableRowBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("table_row"),
 });
+export type NotionTableRowBlockType = z.infer<typeof NotionTableRowBlockSchema>;
 
-const NotionTemplateBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionTemplateBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("template"),
   template: z.object({
     rich_text: z.array(NotionTextSchema),
   }),
 });
+export type NotionTemplateBlockType = z.infer<typeof NotionTemplateBlockSchema>;
 
-const NotionVideoBlockSchema = NotionBlockBaseSchema.extend({
+export const NotionVideoBlockSchema = NotionBlockBaseSchema.extend({
   type: z.literal("video"),
   video: NotionFileSchema,
 });
+export type NotionVideoBlockType = z.infer<typeof NotionVideoBlockSchema>;
 
 export const NotionBlockSchema = z.discriminatedUnion("type", [
   NotionBookmarkBlockSchema,
