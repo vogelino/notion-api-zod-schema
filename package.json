@@ -3,13 +3,18 @@
   "version": "0.2.0",
   "description": "Zod schemas for the Notion API (unofficial)",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "test": "glob -c \"node --loader tsx --no-warnings --test\" \"./tests/**/*.test.ts\""
   },
   "keywords": [],
   "author": "vogelino <contact@vogelino.com>",
   "license": "MIT",
   "devDependencies": {
+    "@notionhq/client": "2.2.11",
+    "dotenv": "16.3.1",
+    "tsx": "3.12.7",
     "typescript": "5.1.6"
   },
   "peerDependencies": {
@@ -18,5 +23,8 @@
   "engines": {
     "node": "20.5.1",
     "npm": "9.8.0"
+  },
+  "dependencies": {
+    "glob": "10.3.3"
   }
 }

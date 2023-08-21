@@ -1,52 +1,9 @@
 import { z } from "zod";
-
-export const NotionColorSchema = z.enum([
-  "default",
-  "gray",
-  "brown",
-  "orange",
-  "yellow",
-  "green",
-  "blue",
-  "purple",
-  "pink",
-  "red",
-]);
-export type NotionColorType = z.infer<typeof NotionColorSchema>;
-
-export const NotionTextBaseSchema = z.object({
-  text: z.object({
-    content: z.string(),
-    link: z.object({ url: z.string() }).nullable(),
-  }),
-  annotations: z.object({
-    bold: z.boolean(),
-    italic: z.boolean(),
-    strikethrough: z.boolean(),
-    underline: z.boolean(),
-    code: z.boolean(),
-    color: NotionColorSchema,
-  }),
-  plain_text: z.string(),
-  href: z.string().nullable(),
-});
-export const NotionBasicTextSchema = NotionTextBaseSchema.extend({
-  type: z.literal("text"),
-});
-export const NotionRichTextSchema = NotionTextBaseSchema.extend({
-  type: z.literal("rich_text"),
-});
-export const NotionTextSchema = z.discriminatedUnion("type", [
-  NotionBasicTextSchema,
-  NotionRichTextSchema,
-]);
-export type NotionTextType = z.infer<typeof NotionTextSchema>;
-
-export const NotionUserSchema = z.object({
-  object: z.literal("user"),
-  id: z.string(),
-});
-export type NotionUserType = z.infer<typeof NotionUserSchema>;
+import { NotionTextSchema } from "./src/NotionTextSchema.ts";
+import { NotionColorSchema } from "./src/NotionColorSchema.ts";
+import { NotionBlockType } from "./src/NotionBlockSchema.ts";
+import { NotionObjectSchema } from "./src/NotionObjectSchema.ts";
+import { NotionFileSchema } from "./src/NotionFileSchema.ts";
 
 export const CollaboratorSchema = z.object({
   id: z.string(),
@@ -55,66 +12,6 @@ export const CollaboratorSchema = z.object({
   avatar: z.string(),
 });
 export type CollaboratorType = z.infer<typeof CollaboratorSchema>;
-
-export const NotionParentSchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("database_id"),
-    database_id: z.string(),
-  }),
-  z.object({
-    type: z.literal("page_id"),
-    page_id: z.string(),
-  }),
-  z.object({
-    type: z.literal("workspace"),
-    workspace: z.boolean(),
-  }),
-  z.object({
-    type: z.literal("block_id"),
-    block_id: z.string(),
-  }),
-]);
-export type NotionParentType = z.infer<typeof NotionParentSchema>;
-
-export const NotionFileSchema = z.object({
-  object: z.literal("file"),
-  file: z.object({
-    name: z.string().optional(),
-    url: z.string().url(),
-    expiry_time: z.string(),
-  }),
-});
-export type NotionFileType = z.infer<typeof NotionFileSchema>;
-
-export const NotionObjectSchema = z.object({
-  id: z.string(),
-  created_time: z.string(),
-  last_edited_time: z.string(),
-  created_by: NotionUserSchema,
-  last_edited_by: NotionUserSchema,
-  archived: z.boolean(),
-  url: z.string().url(),
-  public_url: z.string().url(),
-  parent: NotionParentSchema,
-});
-
-export const NotionBlockBaseSchema = NotionObjectSchema.extend({
-  object: z.literal("block"),
-});
-
-export const NotionParagraphBlockSchema = NotionBlockBaseSchema.extend({
-  type: z.literal("paragraph"),
-  paragraph: z.object({
-    text: z.array(NotionTextSchema),
-  }),
-});
-
-export const NotionRichTextBlockSchema = NotionBlockBaseSchema.extend({
-  type: z.literal("rich_text"),
-  rich_text: z.object({
-    text: z.array(NotionTextSchema),
-  }),
-});
 
 export const NotionRelationSchema = z.object({
   id: z.string(),
@@ -202,7 +99,7 @@ export const NotionRollupSchema = z.object({
   type: z.literal("rollup"),
   rollup: z.object({
     type: z.literal("array"),
-    array: z.array(NotionRichTextSchema).optional(),
+    array: z.array(NotionTextSchema).optional(),
     function: z.enum([
       "average",
       "checked",
@@ -253,8 +150,38 @@ export const NotionPageSchema = NotionObjectSchema.extend({
 });
 export type NotionPageType = z.infer<typeof NotionPageSchema>;
 
-export const NotionBlockSchema = z.discriminatedUnion("type", [
-  NotionParagraphBlockSchema,
+const NotionRichTextBlockSchema = z.object({
+  type: z.literal("rich_text"),
+  rich_text: z.object({
+    text: z.array(NotionTextSchema),
+  }),
+});
+
+export type NotionPageWithContentsType = NotionPageType & {
+  contents: NotionBlockType[];
+};
+
+export const NotionDateSchema = z.object({
+  id: z.string(),
+  type: z.literal("date"),
+  date: z.object({
+    start: z.string(),
+    end: z.string().nullable(),
+  }),
+});
+
+export const NotionPropertySchema = z.discriminatedUnion("type", [
+  NotionTitleSchema,
   NotionRichTextBlockSchema,
+  NotionNumberSchema,
+  NotionSelectSchema,
+  NotionMultiSelectSchema,
+  NotionDateSchema,
 ]);
-export type NotionBlockType = z.infer<typeof NotionBlockSchema>;
+
+export const NotionDatabaseSchema = NotionObjectSchema.extend({
+  object: z.literal("database"),
+  type: z.literal("database"),
+  title: z.array(NotionTextSchema),
+  properties: z.array(NotionPropertySchema),
+});
