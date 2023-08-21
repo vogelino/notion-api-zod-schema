@@ -1,5 +1,5 @@
 node_modules
 lib
-index.js
-index.d.ts
+**/*.js
+**/*.d.ts
 .env
