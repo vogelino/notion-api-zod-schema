@@ -178,7 +178,7 @@ export const NotionDatabaseTitleSchema = NotionDatabaseCellSchema.extend({
 });
 export type NotionDatabaseTitleType = z.infer<typeof NotionDatabaseTitleSchema>;
 
-const NotionDatabaseRichTextBlockSchema = z.object({
+export const NotionDatabaseRichTextBlockSchema = z.object({
   type: z.literal("rich_text"),
   rich_text: z.array(NotionTextSchema),
 });
@@ -200,7 +200,7 @@ export type NotionDatabaseCreatedByType = z.infer<
   typeof NotionDatabaseCreatedBySchema
 >;
 
-const NotionDatabaseCreatedTimeSchema = NotionDatabaseCellSchema.extend({
+export const NotionDatabaseCreatedTimeSchema = NotionDatabaseCellSchema.extend({
   type: z.literal("created_time"),
   created_time: NotionDateSchema,
 });
@@ -208,23 +208,26 @@ export type NotionDatabaseCreatedTimeType = z.infer<
   typeof NotionDatabaseCreatedTimeSchema
 >;
 
-const NotionDatabaseLastEditedBySchema = NotionDatabaseCellSchema.extend({
-  type: z.literal("last_edited_by"),
-  last_edited_by: NotionUserSchema,
-});
+export const NotionDatabaseLastEditedBySchema = NotionDatabaseCellSchema.extend(
+  {
+    type: z.literal("last_edited_by"),
+    last_edited_by: NotionUserSchema,
+  }
+);
 export type NotionDatabaseLastEditedByType = z.infer<
   typeof NotionDatabaseLastEditedBySchema
 >;
 
-const NotionDatabaseLastEditedTimeSchema = NotionDatabaseCellSchema.extend({
-  type: z.literal("last_edited_time"),
-  last_edited_time: NotionDateSchema,
-});
+export const NotionDatabaseLastEditedTimeSchema =
+  NotionDatabaseCellSchema.extend({
+    type: z.literal("last_edited_time"),
+    last_edited_time: NotionDateSchema,
+  });
 export type NotionDatabaseLastEditedTimeType = z.infer<
   typeof NotionDatabaseLastEditedTimeSchema
 >;
 
-const NotionDatabasePeopleSchema = NotionDatabaseCellSchema.extend({
+export const NotionDatabasePeopleSchema = NotionDatabaseCellSchema.extend({
   type: z.literal("people"),
   people: z.array(NotionUserSchema),
 });
@@ -232,7 +235,7 @@ export type NotionDatabasePeopleType = z.infer<
   typeof NotionDatabasePeopleSchema
 >;
 
-const NotionDatabasePhoneNumberSchema = NotionDatabaseCellSchema.extend({
+export const NotionDatabasePhoneNumberSchema = NotionDatabaseCellSchema.extend({
   type: z.literal("phone_number"),
   phone_number: z.string(),
 });
@@ -240,7 +243,7 @@ export type NotionDatabasePhoneNumberType = z.infer<
   typeof NotionDatabasePhoneNumberSchema
 >;
 
-const NotionDatabaseStatusSchema = NotionDatabaseCellSchema.extend({
+export const NotionDatabaseStatusSchema = NotionDatabaseCellSchema.extend({
   type: z.literal("status"),
   color: NotionColorSchema.optional(),
 });
@@ -248,7 +251,7 @@ export type NotionDatabaseStatusType = z.infer<
   typeof NotionDatabaseStatusSchema
 >;
 
-const NotionDatabaseEmailSchema = NotionDatabaseCellSchema.extend({
+export const NotionDatabaseEmailSchema = NotionDatabaseCellSchema.extend({
   type: z.literal("email"),
   email: z.string(),
 });
